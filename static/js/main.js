@@ -1,0 +1,1 @@
+document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('[confirm-delete]').forEach(el=>el.addEventListener('submit',e=>{if(!confirm('Delete this record?'))e.preventDefault()}));});

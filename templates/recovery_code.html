@@ -1,0 +1,1 @@
+{% extends 'base.html' %}{% block content %}<div class="alert alert-warning my-5"><h1 class="h4">Save your recovery code now</h1><p>This code is displayed only once. Store it privately.</p><code class="fs-5 user-select-all">{{ code }}</code></div><a class="btn btn-success" href="{{ url_for('auth.login') }}">Continue to sign in</a>{% endblock %}
