@@ -1,4 +1,5 @@
-from flask import Flask, render_template
+import os
+from flask import Flask, render_template, jsonify
 from config import Config
 from extensions import db, csrf, limiter
 
@@ -6,6 +7,10 @@ from extensions import db, csrf, limiter
 def create_app(config_object=Config):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(config_object)
+
+    # Flask's instance directory is not guaranteed to exist on a fresh deploy.
+    os.makedirs(app.instance_path, exist_ok=True)
+
     db.init_app(app)
     csrf.init_app(app)
     limiter.init_app(app)
@@ -19,6 +24,10 @@ def create_app(config_object=Config):
     from routes.reports import reports_bp
     for blueprint in (auth_bp, dashboard_bp, tasks_bp, habits_bp, finance_bp, budgets_bp, reports_bp):
         app.register_blueprint(blueprint)
+
+    @app.get('/health')
+    def health():
+        return jsonify(status='ok'), 200
 
     @app.errorhandler(400)
     def bad_request(_):
@@ -49,6 +58,7 @@ def create_app(config_object=Config):
             print('LifeFlow database tables are ready.')
 
     return app
+
 
 app = create_app()
 
